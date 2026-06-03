@@ -3,6 +3,15 @@ import type { Empleado } from "../types/Empleado";
 import type { empleadoType } from "../types/Props";
 import Swal from "sweetalert2";
 
+/**
+ * [ES] Hook personalizado que gestiona el estado de la lista de empleados
+ *      y su persistencia en localStorage.
+ * [EN] Custom hook that manages the employee list state
+ *      and its persistence in localStorage.
+ *
+ * @returns [ES] Objeto con el estado y las funciones para manejar empleados.
+ *          [EN] Object with state and functions to manage employees.
+ */
 const useEmpleado = () => {
     const [empleados, setEmpleados] = useState<Empleado[]>(() => {
         const empleadosGuardados = localStorage.getItem("empleados");
@@ -15,6 +24,15 @@ const useEmpleado = () => {
         localStorage.setItem("empleados", JSON.stringify(empleados));
     }, [empleados]);
 
+    /**
+     * [ES] Guarda un empleado nuevo o actualiza uno existente.
+     *      Si el empleado no tiene ID se considera nuevo y se le asigna uno basado en la fecha actual.
+     * [EN] Saves a new employee or updates an existing one.
+     *      If the employee has no ID it is treated as new and assigned a timestamp-based ID.
+     *
+     * @param empleado [ES] Datos del empleado a guardar o actualizar.
+     *                 [EN] Employee data to save or update.
+     */
     const guardarEmpleado = (empleado: Empleado): void => {
         if (!empleado.id) {
             empleado.id = Date.now().toString();
@@ -31,8 +49,15 @@ const useEmpleado = () => {
                 title: "Empleado actualizado correctamente",
             });
         }
-    }
+    };
 
+    /**
+     * [ES] Elimina un empleado por su ID tras pedir confirmación al usuario.
+     * [EN] Deletes an employee by their ID after requesting user confirmation.
+     *
+     * @param id [ES] Identificador único del empleado a eliminar.
+     *           [EN] Unique identifier of the employee to delete.
+     */
     const eliminarEmpleado = (id: string): void => {
         Swal.fire({
             title: "¿Está seguro?",
@@ -45,7 +70,7 @@ const useEmpleado = () => {
             confirmButtonText: "Sí, eliminar",
         }).then((result) => {
             if (result.isConfirmed) {
-                setEmpleados(empleados.filter(emp => emp.id !== id));
+                setEmpleados(empleados.filter((emp) => emp.id !== id));
                 Swal.fire({
                     title: "Eliminado",
                     text: "El empleado ha sido eliminado",
@@ -53,7 +78,7 @@ const useEmpleado = () => {
                 });
             }
         });
-    }
+    };
 
     return {
         empleados,
@@ -61,7 +86,7 @@ const useEmpleado = () => {
         setEmpleadoEditar,
         guardarEmpleado,
         eliminarEmpleado,
-    }
-}
+    };
+};
 
 export default useEmpleado;
